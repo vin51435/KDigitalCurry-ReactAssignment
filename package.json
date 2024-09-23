@@ -1,0 +1,25 @@
+{
+  "name": "kdigitalcurry-reactassignment",
+  "version": "1.0.0",
+  "description": "Directory Learning Assignemnt by KDigitalCurry using react and mongodb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && nodemon index.js",
+    "start": "concurrently \"npm run frontend\" \"npm run backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vin51435/KDigitalCurry-ReactAssignment.git"
+  },
+  "author": "Vinay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vin51435/KDigitalCurry-ReactAssignment/issues"
+  },
+  "homepage": "https://github.com/vin51435/KDigitalCurry-ReactAssignment#readme",
+  "dependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
