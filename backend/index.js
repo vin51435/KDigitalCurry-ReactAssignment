@@ -4,7 +4,22 @@ const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = [
+  'http://localhost:5000',
+  'http://localhost:5001',
+  'https://k-digital-curry-react-assignment.vercel.app/' 
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 mongoose.connect('mongodb+srv://root:root@cluster0.oau3jje.mongodb.net/kdigitalcurry?retryWrites=true&w=majority&appName=Cluster0', {}).then(() => console.log('DB connected!!'));
 
