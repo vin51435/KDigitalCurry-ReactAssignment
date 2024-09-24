@@ -8,7 +8,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5000',
   'http://localhost:5001',
-  'https://k-digital-curry-react-assignment.vercel.app/' 
+  'https://k-digital-curry-react-assignment.vercel.app' 
 ];
 
 app.use(cors({
