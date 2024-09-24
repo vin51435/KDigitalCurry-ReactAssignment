@@ -1,0 +1,57 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const fetchProducts = createAsyncThunk('product/fetchProducts', async () => {
+  const response = await axios.get('http://localhost:5000/products');
+  return response.data;
+});
+
+export const fetchMaterials = createAsyncThunk('product/fetchMaterials', async () => {
+  const response = await axios.get('http://localhost:5000/materials');
+  return response.data;
+});
+
+export const fetchGrades = createAsyncThunk('product/fetchGrades', async () => {
+  const response = await axios.get('http://localhost:5000/grades');
+  return response.data;
+});
+
+export const fetchCombinations = createAsyncThunk(
+  'product/fetchCombinations',
+  async ({ page = 1, limit = 10, sortBy = 'name', sortOrder = 'asc', materialId = null, productName = null }) => {
+    const response = await axios.get(
+      `http://192.168.0.107:5000/allproducts?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}${materialId ? `&materialId=${materialId}` : ''}${productName ? `&productName=${productName}`:''}`
+    );
+    return response.data;
+  }
+);
+
+
+const productSlice = createSlice({
+  name: 'product',
+  initialState: {
+    products: [],
+    materials: [],
+    grades: [],
+    data: [],
+    status: 'idle',
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.products = action.payload;
+      })
+      .addCase(fetchMaterials.fulfilled, (state, action) => {
+        state.materials = action.payload;
+      })
+      .addCase(fetchGrades.fulfilled, (state, action) => {
+        state.grades = action.payload;
+      })
+      .addCase(fetchCombinations.fulfilled, (state, action) => {
+        state.data = action.payload;
+      });
+  },
+});
+
+export default productSlice.reducer;
