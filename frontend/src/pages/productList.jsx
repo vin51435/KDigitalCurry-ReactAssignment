@@ -5,9 +5,8 @@ import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-tabl
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCombinations, fetchGrades, fetchMaterials, fetchProducts } from '../redux/reducers/productSlice';
 import { FaSort } from "react-icons/fa";
-import AddProduct from './addProduct';
-import axios from 'axios';
-
+import AddProduct from '../components/addProduct';
+import UpdateCombinationForm from '../components/updateCombinations';
 
 const ProductList = () => {
   const [expandedRowId, setExpandedRowId] = useState(null);
@@ -99,129 +98,6 @@ const ProductList = () => {
 
   const showAddFnc = (bool) => {
     setShowAdd(bool);
-  };
-
-
-  const UpdateCombinationForm = ({ row, setExpandedRowId, fetchCombinationsFnc }) => {
-    const [formData, setFormData] = useState({
-      productId: row.original.productId._id,
-      materialId: row.original.materialId._id,
-      gradeIds: row.original.gradeIds || [],
-      shape: row.original.shape || '',
-      length: row.original.length || '',
-      thickness: row.original.thickness || '',
-      price: row.original.price || '',
-      currency: row.original.currency || '',
-    });
-
-    const handleChange = (event) => {
-      const { name, value } = event.target;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    };
-
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      const combinationId = row.original._id; // Get the combination ID
-
-      try {
-        const response = await axios.put(`http://localhost:5000/update-combination/${combinationId}`, {
-          ...formData,
-        });
-
-        console.log('Update successful:', response.data);
-        alert(response.data.message);
-        setExpandedRowId(null);
-        fetchCombinationsFnc();
-      } catch (error) {
-        console.error('Error updating combination:', error);
-        // Optionally handle error (e.g., show an error message)
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <label>
-          Product Name:
-          <input
-            type="text"
-            value={row.original.productId.name}
-            readOnly // Assuming product name is not editable
-          />
-        </label>
-        <label>
-          Material:
-          <input
-            type="text"
-            value={row.original.materialId.name}
-            readOnly // Assuming material name is not editable
-          />
-        </label>
-        <label>
-          Grade IDs:
-          <input
-            type="text"
-            name="gradeIds"
-            value={formData.gradeIds.join(', ')} // Display as comma-separated values
-            onChange={(e) => handleChange({
-              target: {
-                name: 'gradeIds',
-                value: e.target.value.split(',').map(id => id.trim()), // Update gradeIds on change
-              }
-            })}
-          />
-        </label>
-        <label>
-          Shape:
-          <input
-            type="text"
-            name="shape"
-            value={formData.shape}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Length:
-          <input
-            type="number"
-            name="length"
-            value={formData.length}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Thickness:
-          <input
-            type="number"
-            name="thickness"
-            value={formData.thickness}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Price:
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Currency:
-          <input
-            type="text"
-            name="currency"
-            value={formData.currency}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Save</button>
-        <button type="button" onClick={() => setExpandedRowId(null)}>Cancel</button>
-      </form>
-    );
   };
 
   return (

@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCombination } from '../redux/reducers/productSlice';
 
 const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
   const products = useSelector((state) => state.product.products);
@@ -10,6 +11,8 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedGrades, setSelectedGrades] = useState({});
 
+  const dispatch = useDispatch()
+  
   const handleProductChange = (event) => {
     setSelectedProduct(event.target.value);
     setSelectedMaterial(null); // Reset material when product changes
@@ -39,9 +42,9 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/add-combination', body);
+      const result = await dispatch(addCombination(body)).unwrap();
       fetchCombinationsFnc();
-      alert(response.data.message);
+      alert(result.message);
       showAddFnc(false);
     } catch (error) {
       console.error('Error adding combination:', error);

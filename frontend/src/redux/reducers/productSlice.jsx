@@ -26,6 +26,23 @@ export const fetchCombinations = createAsyncThunk(
   }
 );
 
+export const updateCombination = createAsyncThunk(
+  'product/updateCombination',
+  async ({ combinationId, formData }) => {
+    const response = await axios.put(`http://localhost:5000/update-combination/${combinationId}`, {
+      ...formData,
+    });
+    return response.data; 
+  }
+);
+
+export const addCombination = createAsyncThunk(
+  'product/addCombination',
+  async (body) => {
+    const response = await axios.post('http://localhost:5000/add-combination', body);
+    return response.data; // Assuming the response contains relevant data
+  }
+);
 
 const productSlice = createSlice({
   name: 'product',
@@ -50,7 +67,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchCombinations.fulfilled, (state, action) => {
         state.data = action.payload;
-      });
+      })
   },
 });
 
