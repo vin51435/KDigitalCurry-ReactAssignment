@@ -8,7 +8,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5000',
   'http://localhost:5001',
-  'https://k-digital-curry-react-assignment.vercel.app' 
+  'https://k-digital-curry-react-assignment.vercel.app'
 ];
 
 app.use(cors({
@@ -21,7 +21,9 @@ app.use(cors({
   }
 }));
 
-mongoose.connect('mongodb+srv://root:root@cluster0.oau3jje.mongodb.net/kdigitalcurry?retryWrites=true&w=majority&appName=Cluster0', {}).then(() => console.log('DB connected!!'));
+mongoose.connect('mongodb+srv://root:root@cluster0.oau3jje.mongodb.net/kdigitalcurry?retryWrites=true&w=majority&appName=Cluster0', {})
+  .then(() => console.log('DB connected!!'))
+  .catch(() => console.log('DB counldn\'t connect'));
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -43,10 +45,12 @@ const combinationSchema = new mongoose.Schema({
   materialId: { type: mongoose.Schema.Types.ObjectId, ref: 'Material', required: true },
   gradeIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Grade', required: true }],
   shape: { type: String, required: false },
-  length: { type: Number, required: false },
-  thickness: { type: Number, required: false },
+  length: { type: String, required: false },
+  thickness: { type: String, required: false },
   price: { type: Number, required: false },
   currency: { type: String, required: false },
+  surface: { type: String, required: false },
+  diameter: { type: String, required: false },
   weight: { type: String, required: false }
 });
 const Combination = mongoose.model('Combination', combinationSchema);
@@ -169,12 +173,12 @@ app.post('/add-combination', async (req, res) => {
 
 app.put('/update-combination/:id', async (req, res) => {
   const { id } = req.params;
-  const { productId, materialId, gradeIds, shape, length, thickness, price, currency } = req.body;
+  const { productId, materialId, gradeIds, shape, length, thickness, price, currency, surface, diameter } = req.body;
 
   try {
     const combination = await Combination.findByIdAndUpdate(
       id,
-      { productId, materialId, gradeIds, shape, length, thickness, price, currency },
+      { productId, materialId, gradeIds, shape, length, thickness, price, currency, diameter, surface },
       { new: true, runValidators: true }
     );
 
@@ -190,16 +194,18 @@ app.put('/update-combination/:id', async (req, res) => {
 });
 
 app.get('/allproducts', async (req, res) => {
-  const { page = 1, limit = 10, materialId, productName, sortBy, sortOrder } = req.query;
+  const { page = 1, limit = 10, materialId, productName, sortBy, sortOrder, searchQuery } = req.query;
   const options = {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
   };
 
   const filters = {};
+
   if (materialId) {
     filters.materialId = materialId;
   }
+
   if (productName) {
     const product = await Product.findOne({ name: productName });
     if (product) {
@@ -210,6 +216,28 @@ app.get('/allproducts', async (req, res) => {
   const order = sortOrder === 'desc' ? -1 : 1;
 
   try {
+    if (searchQuery) {
+      const keywords = searchQuery.split(' ');
+
+      const matchingProducts = await Product.find({
+        name: { $regex: new RegExp(keywords.join('|'), 'i') }
+      }).select('_id');
+
+      const matchingMaterials = await Material.find({
+        name: { $regex: new RegExp(keywords.join('|'), 'i') }
+      }).select('_id');
+
+      const matchingGrades = await Grade.find({
+        name: { $regex: new RegExp(keywords.join('|'), 'i') }
+      }).select('_id');
+
+      filters.$or = [
+        { productId: { $in: matchingProducts.map(p => p._id) } },
+        { materialId: { $in: matchingMaterials.map(m => m._id) } },
+        { gradeIds: { $in: matchingGrades.map(g => g._id) } }
+      ];
+    }
+
     const combinations = await Combination.find(filters)
       .populate('productId', 'name')
       .populate('materialId', 'name')
