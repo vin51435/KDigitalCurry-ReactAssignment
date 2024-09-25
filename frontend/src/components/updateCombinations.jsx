@@ -14,6 +14,7 @@ const UpdateCombinationForm = ({ row, setExpandedRowId, fetchCombinationsFnc }) 
     thickness: row.original.thickness || '',
     price: row.original.price || '',
     currency: row.original.currency || '',
+    weight: row.original.weight || '',
     surface: row.original.surface || '',
     diameter: row.original.diameter || '',
   });
@@ -64,7 +65,7 @@ const UpdateCombinationForm = ({ row, setExpandedRowId, fetchCombinationsFnc }) 
               name="currency"
               id="currency"
               className='form-select px-2 rounded-0 border-end border-black'>
-              <option value='INR'>INR</option>
+              <option defaultValue='INR'>INR</option>
               <option value='USD'>USD</option>
             </select>
             <input value={formData?.price} onChange={handleChange} type="number" name="price" id="price" className="form-control rounded-0" />
@@ -74,7 +75,7 @@ const UpdateCombinationForm = ({ row, setExpandedRowId, fetchCombinationsFnc }) 
               name="weight"
               id="weight"
               className='form-select px-2 rounded-0 rounded-start-pill border-start border-black'>
-              <option value='KG'>KG</option>
+              <option defaultValue='KG'>KG</option>
               <option value='TON'>TON</option>
             </select>
           </div>
