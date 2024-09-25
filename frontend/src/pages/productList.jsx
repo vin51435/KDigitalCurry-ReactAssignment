@@ -6,6 +6,7 @@ import { FaSort } from "react-icons/fa";
 import AddProduct from '../components/addProduct';
 import UpdateCombinationForm from '../components/updateCombinations';
 import { LuPlus } from "react-icons/lu";
+import Spinner from '../assets/Spinner';
 
 const ProductList = () => {
   const [expandedRowId, setExpandedRowId] = useState(null);
@@ -14,6 +15,7 @@ const ProductList = () => {
   });
   const [showAdd, setShowAdd] = useState(false);
   const [selectedRowIds, setSelectedRowIds] = useState({});
+  const [load, setLoad] = useState(true);
 
   const products = useSelector((state) => state.product.products);
   const materials = useSelector((state) => state.product.materials);
@@ -22,7 +24,12 @@ const ProductList = () => {
   const dispatch = useDispatch();
 
   const fetchCombinationsFnc = () => {
-    dispatch(fetchCombinations({ page: filters.page, limit: filters.limit, sortBy: filters.sortBy, sortOrder: filters.sortOrder, productName: filters.productName, searchQuery: filters.searchQuery, materialId: filters.materialId }));
+    dispatch(fetchCombinations({ page: filters.page, limit: filters.limit, sortBy: filters.sortBy, sortOrder: filters.sortOrder, productName: filters.productName, searchQuery: filters.searchQuery, materialId: filters.materialId }))
+      .then(() => setLoad(false))
+      .catch(() => {
+        setLoad(false);
+        alert('Failed loading data');
+      });
   };
 
   useEffect(() => {
@@ -193,7 +200,7 @@ const ProductList = () => {
           </button>
         </div>
       </div>
-      <table>
+      <table className='position-relative'>
         <thead className='neonBlue_bg '>
           <tr>
             {table.getHeaderGroups().map(headerGroup => (
@@ -219,6 +226,13 @@ const ProductList = () => {
             ))}
           </tr>
         </thead>
+        {load &&
+          <td colSpan={5} className="text-center" style={{ height: '100px' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+              <Spinner size={40} />
+            </div>
+          </td>
+        }
         <tbody>
           {table.getRowModel().rows.map(row => (
             <React.Fragment key={row.id}>
