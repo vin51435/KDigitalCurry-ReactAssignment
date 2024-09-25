@@ -44,14 +44,14 @@ const combinationSchema = new mongoose.Schema({
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   materialId: { type: mongoose.Schema.Types.ObjectId, ref: 'Material', required: true },
   gradeIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Grade', required: true }],
-  shape: { type: String, required: false },
-  length: { type: String, required: false },
-  thickness: { type: String, required: false },
-  price: { type: Number, required: false },
-  currency: { type: String, required: false },
-  surface: { type: String, required: false },
-  diameter: { type: String, required: false },
-  weight: { type: String, required: false }
+  shape: { type: String, required: false, default: '-' },
+  length: { type: String, required: false, default: '-' },
+  thickness: { type: String, required: false, default: '-' },
+  price: { type: Number, required: false, default: 0 },
+  currency: { type: String, required: false, default: '-' },
+  surface: { type: String, required: false, default: '-' },
+  diameter: { type: String, required: false, default: '-' },
+  weight: { type: String, required: false, default: '-' }
 });
 const Combination = mongoose.model('Combination', combinationSchema);
 
@@ -173,12 +173,12 @@ app.post('/add-combination', async (req, res) => {
 
 app.put('/update-combination/:id', async (req, res) => {
   const { id } = req.params;
-  const { productId, materialId, gradeIds, shape, length, thickness, price, currency, surface, diameter } = req.body;
+  const { productId, materialId, gradeIds, shape, length, thickness, price, currency, weight, surface, diameter } = req.body;
 
   try {
     const combination = await Combination.findByIdAndUpdate(
       id,
-      { productId, materialId, gradeIds, shape, length, thickness, price, currency, diameter, surface },
+      { productId, materialId, gradeIds, shape, length, thickness, price, currency, weight, diameter, surface },
       { new: true, runValidators: true }
     );
 
