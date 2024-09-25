@@ -18,10 +18,12 @@ export default [
       },
     },
     settings: { react: { version: '18.3' } },
+    plugins: [
+      "react"
+    ],
     plugins: {
-      react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "react/jsx-uses-vars": "error",
+      "react/jsx-uses-react": "error"
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -33,12 +35,12 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      "no-unused-vars": [
-        "error",
-        {
-          "varsIgnorePattern": "React"
-        }
-      ]
+      // "no-unused-vars": [
+      //   "error",
+      //   {
+      //     "varsIgnorePattern": "React"
+      //   }
+      // ]
     },
   },
 ];

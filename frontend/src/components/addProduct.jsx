@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCombination } from '../redux/reducers/productSlice';
+import { SlClose } from "react-icons/sl";
 
 const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
   const products = useSelector((state) => state.product.products);
@@ -11,8 +12,8 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedGrades, setSelectedGrades] = useState({});
 
-  const dispatch = useDispatch()
-  
+  const dispatch = useDispatch();
+
   const handleProductChange = (event) => {
     setSelectedProduct(event.target.value);
     setSelectedMaterial(null); // Reset material when product changes
@@ -53,14 +54,16 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
   };
 
   return (
-    <div className='w-100 h-100 position-absolute d-flex justify-content-center align-items-center'>
-      <div className='w-50 h-50 position-relative bg-white m-auto z-3 p-3'>
-        <div className='d-flex justify-content-end w-100' onClick={() => showAddFnc(false)}>
-          <button>Close</button>
+    <div className='w-100 h-100 position-absolute d-flex justify-content-center align-items-center fs-6'>
+      <div className='w-75 h-75 position-relative bg-white m-auto z-3 p-3'>
+        <div className='d-flex justify-content-between w-100' onClick={() => showAddFnc(false)}>
+          <h3 className='fw-bold'>Add Products</h3>
+          <span style={{ cursor: 'pointer' }}>
+            <SlClose />
+          </span>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {/* First Column: Product */}
+        <form onSubmit={handleSubmit} className='d-flex flex-column justify-content-between w-100'>
+          <div className='row row-cols-3 d-flex justify-content-between' >
             <div>
               <h3>Product</h3>
               {products.map((product) => (
@@ -76,7 +79,6 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
               ))}
             </div>
 
-            {/* Second Column: Material */}
             <div>
               <h3>Material</h3>
               {materials.map((material) => (
@@ -93,19 +95,17 @@ const AddProduct = ({ showAddFnc, fetchCombinationsFnc }) => {
               ))}
             </div>
 
-            {/* Third Column: Grade */}
             <div>
               <h3>Grade</h3>
               {selectedProduct && selectedMaterial && grades.map((grade) => {
                 const mergedName = `${materials.find(mat => mat._id === selectedMaterial)?.name} ${grade.name} ${products.find(prod => prod._id === selectedProduct)?.name}`;
                 return (
-                  <div key={grade._id}>
-                    <input
-                      type="checkbox"
+                  <div className={`form-check form-check-reverse add-check rounded-pill align-items-center`} key={grade._id}>
+                    <input className="form-check-input" type="checkbox"
                       id={grade._id}
-                      onChange={handleGradeChange}
-                    />
-                    <label htmlFor={grade._id}>{mergedName}</label>
+                      onChange={handleGradeChange} />
+                    <label className="form-check-label text-start" htmlFor={grade._id}>{mergedName}
+                    </label>
                   </div>
                 );
               })}

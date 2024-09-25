@@ -20,9 +20,9 @@ export const fetchGrades = createAsyncThunk('product/fetchGrades', async () => {
 
 export const fetchCombinations = createAsyncThunk(
   'product/fetchCombinations',
-  async ({ page = 1, limit = 10, sortBy = 'name', sortOrder = 'asc', materialId = null, productName = null }) => {
+  async ({ page = 1, limit = 10, sortBy = 'name', sortOrder = 'asc', materialId = null, productName = null, searchQuery = null }) => {
     const response = await axios.get(
-      `${domain}/allproducts?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}${materialId ? `&materialId=${materialId}` : ''}${productName ? `&productName=${productName}` : ''}`
+      `${domain}/allproducts?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}${searchQuery ? `&searchQuery=${searchQuery}` : ''}${materialId ? `&materialId=${materialId}` : ''}${productName ? `&productName=${productName}` : ''}`
     );
     return response.data;
   }

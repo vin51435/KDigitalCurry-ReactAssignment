@@ -1,13 +1,48 @@
-.edit-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+.search-container {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+.search-input,
+.search-button {
+  height: 100%;
+  /* Ensure both take the full height */
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px;
   font-size: 16px;
-  margin: 4px 2px;
+  outline: none;
+}
+
+.search-input:focus-visible {
+  outline: none;
+}
+
+.search-button {
+  font-size: 16px;
+  color: white;
   cursor: pointer;
-  border-radius: 5px;
+}
+
+table {
+  min-width: 1024px;
+}
+
+.expandable-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.expandable-content.expanded {
+  max-height: 500px; /* Adjust the value to accommodate the content */
+}
+
+.form-check:has(.form-check-input:checked) {
+  background-color: #d9f7ff; 
 }
